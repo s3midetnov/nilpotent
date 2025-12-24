@@ -1,0 +1,47 @@
+\import Algebra.Group
+\import Algebra.Meta
+\import Data.List
+\import Function.Meta
+\import Meta
+\import Paths.Meta
+\import Prelude
+\import Set (ArrayDec)
+\open Group
+
+
+{- | $[a, b] := a^{ -1} b^{ -1} ab$ -}
+\func comm {G : Group} (a b : G) : G => inverse a G.* inverse b G.* a G.*  b
+
+
+{- | $[a_1, ..., a_n]_r := [a_1, [a_2, ..., a_n]]$ -}
+\func rightcomm{G : Group}(l : List G): G \elim l
+  | nil => G.ide
+  | a :: l => comm a $ rightcomm l
+
+{- | $[a_1, ..., a_n]_l := [[[a_1, a_2], ...,] a_n]$ -}
+\func leftcomm{G : Group}(l : List G) : G => pseudocomm $ reverse l
+  \where {
+    \private \func reverse(l : List G) : List G \elim l
+      | nil => nil
+      | a :: l => (reverse l) ++ (a :: nil)
+
+    \private \func pseudocomm{G : Group}(l : List G) : G \elim l
+      | nil => G.ide
+      | a :: l => comm (pseudocomm l) a
+
+    \func leftcomm-3{G : Group} (a b c : G) => comm (comm a b) c
+
+    \func leftcomm-3=leftcom{G : Group}(a b c : G) : leftcomm-3 a b c = leftcomm (a :: b :: c :: nil)
+      => unfold leftcomm (unfold leftcomm-3 (unfold comm (rewrite (G.inverse_*) {?})))
+  }
+
+-- | $[x, y^{-1}, z]^y \cdot [y, z^{-1}, x]^z \cdot [z, x^{-1}, y]^x = 1$
+\lemma HallWittIdentity{G : Group}(x y z : G)
+  : (symmcomm x y z) G.* (symmcomm y z x) G.* (symmcomm z x y) = G.ide => equation.group
+  \where {
+  \open leftcomm
+  \private \func symmcomm {G : Group}(x y z : G) : G => conjugate (inverse y) (leftcomm-3 x (inverse y) z)
+}
+
+\lemma PseudoJacoby{G : Group}(x y z : G)
+  : (comm (x G.* y) z)  G.* (comm (y G.* z) x)G.* (comm (z G.* x) y) = G.ide => equation.group
