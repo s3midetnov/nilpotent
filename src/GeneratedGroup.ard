@@ -1,7 +1,0 @@
-\import Algebra.Group
-\import Algebra.Group.Free
-\import Algebra.Group.GroupCategory
-\import Set
-
-\func GeneratedSubGroup{G : Group}(S : SubSet G) => ImageSubGroup (FreeGroupUniversalProperty S.ISet G (\lam x => x.1)).1
-

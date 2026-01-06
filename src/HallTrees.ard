@@ -1,3 +1,0 @@
-\import Set.Fin
-
-\data HallTree (X : FinSet)
