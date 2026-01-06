@@ -1,17 +1,14 @@
 \import Algebra.Group
-\import Algebra.Meta
 \import Data.List
 \import Function.Meta
 \import Meta
 \import Paths.Meta
-\import Prelude
 \import Set (ArrayDec)
 \open Group
-
+\import Algebra.Meta
 
 {- | $[a, b] := a^{ -1} b^{ -1} ab$ -}
 \func comm {G : Group} (a b : G) : G => inverse a G.* inverse b G.* a G.*  b
-
 
 {- | $[a_1, ..., a_n]_r := [a_1, [a_2, ..., a_n]]$ -}
 \func rightcomm{G : Group}(l : List G): G \elim l
@@ -23,7 +20,7 @@
   \where {
     \private \func reverse(l : List G) : List G \elim l
       | nil => nil
-      | a :: l => (reverse l) ++ (a :: nil)
+      | a :: l => reverse l ++ (a :: nil)
 
     \private \func pseudocomm{G : Group}(l : List G) : G \elim l
       | nil => G.ide
@@ -34,6 +31,9 @@
     \func leftcomm-3=leftcom{G : Group}(a b c : G) : leftcomm-3 a b c = leftcomm (a :: b :: c :: nil)
       => unfold leftcomm (unfold leftcomm-3 (unfold comm (rewrite (G.inverse_*) {?})))
   }
+
+\lemma comm-inverse {G : Group} (x y : G) : inverse (comm x y) = comm y x
+  => equation.group
 
 -- | $[x, y^{-1}, z]^y \cdot [y, z^{-1}, x]^z \cdot [z, x^{-1}, y]^x = 1$
 \lemma HallWittIdentity{G : Group}(x y z : G)
