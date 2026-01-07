@@ -25,5 +25,16 @@
   )
 
 
--- TODO
-\func nilpotentOfClass1<->abelian (G : Group) : isAbelianGroup G <-> isNilpotentGroupOfClass 1 G => {?}
+\func nilpotentOfClass1<->abelian (G : Group) : isAbelianGroup G <-> isNilpotentGroupOfClass 1 G =>
+  (Abelian=>IsNilpotent, IsNilpotent1=>Abelian)
+\where {
+  \func Abelian=>IsNilpotent (ab : isAbelianGroup G) : isNilpotentGroupOfClass 1 G
+    => generatedByIde (commutators-subset nonProperSubgroup nonProperSubgroup)
+        (\lam (inP (x, y, _, _, a=xy)) => rewriteEq a=xy $ unfold comm $ rewriteEq (ab (inverse y) x, inv Group.*-assoc) $ rewrite (Group.inverse-left, Group.ide-left, Group.inverse-left) idp)
+        (SubGroupClosure (commutators-subset nonProperSubgroup nonProperSubgroup))
+
+  \func IsNilpotent1=>Abelian (p : isNilpotentGroupOfClass 1 G) : isAbelianGroup G
+    => \lam a b =>
+        \let s : comm a b = G.ide => p (comm a b) (inP (0, byRight $ byLeft $ inP (a, b, (), (), idp))) \in
+        rewriteI {4} Group.ide-right $ rewriteI s $ equation.group
+}
