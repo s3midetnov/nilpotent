@@ -2,6 +2,7 @@
 \import Data.List
 \import Function.Meta
 \import Meta
+\import Paths
 \import Paths.Meta
 \import Set (ArrayDec)
 \open Group
@@ -18,7 +19,7 @@
 {- | $[a_1, ..., a_n]_l := [[[a_1, a_2], ...,] a_n]$ -}
 \func leftcomm{G : Group}(l : List G) : G => pseudocomm $ reverse l
   \where {
-    \private \func reverse(l : List G) : List G \elim l
+    \func reverse(l : List G) : List G \elim l
       | nil => nil
       | a :: l => reverse l ++ (a :: nil)
 

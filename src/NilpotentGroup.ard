@@ -27,7 +27,7 @@
 
 \func nilpotentOfClass1<->abelian (G : Group) : isAbelianGroup G <-> isNilpotentGroupOfClass 1 G =>
   (Abelian=>IsNilpotent, IsNilpotent1=>Abelian)
-\where {
+\where \private{
   \func Abelian=>IsNilpotent (ab : isAbelianGroup G) : isNilpotentGroupOfClass 1 G
     => generatedByIde (commutators-subset nonProperSubgroup nonProperSubgroup)
         (\lam (inP (x, y, _, _, a=xy)) => rewriteEq a=xy $ unfold comm $ rewriteEq (ab (inverse y) x, inv Group.*-assoc) $ rewrite (Group.inverse-left, Group.ide-left, Group.inverse-left) idp)

@@ -166,14 +166,11 @@
 
 \func generatedByIde {G : Group} (S : SubSet G) (S-is-ide : subset-is-ide S)
                       (H : GeneratedSubgroup-General S) : isTrivialSubGroup H.sub
-  => \lam _ => rewrite sooo $ \lam x=ide => x=ide
-  \where {
+  => \lam _ => rewrite (GeneratedSubgroup-General.isProp S H generated-is-trivial) $ \lam x=ide => x=ide
+  \where \private{
     \func generated-is-trivial : GeneratedSubgroup-General S trivialSubgroup \cowith
       | contains => S-is-ide
       | minimal H _ => \lam _ x=ide => rewriteEq x=ide $ H.contains_ide
-
-    \func sooo : H = generated-is-trivial
-      => GeneratedSubgroup-General.isProp S H generated-is-trivial
   }
 
 {- | 4. Invariant subsets -}
