@@ -16,14 +16,25 @@
 \import grouplib
 
 \func isNilpotentGroupOfClass (k : Nat) (G : Group) : \Prop
-  => isTrivialSubGroup (lowerCentralSeries_1+ k G)
+  => is-bottomSubGroup (lowerCentralSeries_1+ k G)
 
-\func nilpotentOfClass0<->trivial (G : Group) : isTrivialGroup G <-> isNilpotentGroupOfClass 0 G =>
+\func nilpotentOfClass0<->trivial (G : Group) : is-trivial-group G <-> isNilpotentGroupOfClass 0 G =>
   (
     \lam isTriv => \lam a _ => isTriv a,
     \lam isNilp => \lam a => isNilp a ()
   )
 
 
--- TODO
-\func nilpotentOfClass1<->abelian (G : Group) : isAbelianGroup G <-> isNilpotentGroupOfClass 1 G => {?}
+\func nilpotentOfClass1<->abelian (G : Group) : is-abelian-group G <-> isNilpotentGroupOfClass 1 G =>
+  (Abelian=>IsNilpotent, IsNilpotent1=>Abelian)
+\where \private{
+  \func Abelian=>IsNilpotent (ab : is-abelian-group G) : isNilpotentGroupOfClass 1 G
+    => generatedByIde (commutators-subset upSubGroup upSubGroup)
+        (\lam (inP (x, y, _, _, a=xy)) => rewriteEq a=xy $ unfold comm $ rewriteEq (ab (inverse y) x, inv Group.*-assoc) $ rewrite (Group.inverse-left, Group.ide-left, Group.inverse-left) idp)
+        (subGroupClosureInterface (commutators-subset upSubGroup upSubGroup))
+
+  \func IsNilpotent1=>Abelian (p : isNilpotentGroupOfClass 1 G) : is-abelian-group G
+    => \lam a b =>
+        \let s : comm a b = G.ide => p (comm a b) (inP (0, byRight $ byLeft $ inP (a, b, (), (), idp))) \in
+        rewriteI {4} Group.ide-right $ rewriteI s $ equation.group
+}

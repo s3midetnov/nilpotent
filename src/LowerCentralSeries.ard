@@ -20,9 +20,9 @@
 \func comm-invariant {G : Group}
                      (theta : GroupHom G G)
                      (A B : SubSet G)
-                     (a-inv : IsInvariantSubSet A theta)
-                     (b-inv : IsInvariantSubSet B theta)
-  : IsInvariantSubSet (commutators-subset A B) theta =>
+                     (a-inv : is-transformation-invariant-SubSet A theta)
+                     (b-inv : is-transformation-invariant-SubSet B theta)
+  : is-transformation-invariant-SubSet (commutators-subset A B) theta =>
   \lam (inP (a,b, in-A, in-B, x=comm)) =>
       inP (theta a, theta b, a-inv in-A, b-inv in-B,
         rewriteEq (x=comm,
@@ -37,9 +37,9 @@
 \func commutatorInvariant {G : Group}
                           {theta : GroupHom G G}
                           (A B : SubSet G)
-                          (A-inv : IsInvariantSubSet A theta)
-                          (B-inv : IsInvariantSubSet B theta)
-  : IsInvariantSubSet (commutators-subset A B) theta =>
+                          (A-inv : is-transformation-invariant-SubSet A theta)
+                          (B-inv : is-transformation-invariant-SubSet B theta)
+  : is-transformation-invariant-SubSet (commutators-subset A B) theta =>
   \lam (inP (a,b, in-A, in-B, x=comm)) =>
       inP (theta a, theta b, A-inv in-A, B-inv in-B,
       rewriteEq x=comm $ rewriteEq (theta.func-*,
@@ -48,8 +48,8 @@
                                     theta.func-inverse,
                                     theta.func-inverse) equation.group)
 \where {
-  \func commutatorSubgroupInv {G : Group} {theta : GroupHom G G} (A B : SubSet G) (A-inv : IsInvariantSubSet A theta)
-                              (B-inv : IsInvariantSubSet B theta) : IsInvariantSubSet (commutatorSubgroup A B) theta
+  \func commutatorSubgroupInv {G : Group} {theta : GroupHom G G} (A B : SubSet G) (A-inv : is-transformation-invariant-SubSet A theta)
+                              (B-inv : is-transformation-invariant-SubSet B theta) : is-transformation-invariant-SubSet (commutatorSubgroup A B) theta
     => InvariantGenerated (commutators-subset A B) (commutatorInvariant A B A-inv B-inv)
 }
 
@@ -58,10 +58,10 @@
   | isNormal g {h} x =>
     commutatorInvariant.commutatorSubgroupInv A B (normal-is-conj-inv A g) (normal-is-conj-inv B g) {h} x
   \where {
-    \func normal-is-conj-inv (A : NormalSubGroup G) (g : G) : IsInvariantSubSet A (conjugateHom g)
+    \func normal-is-conj-inv (A : NormalSubGroup G) (g : G) : is-transformation-invariant-SubSet A (conjugateHom g)
       => \lam in-A => isNormal g in-A
   }
 
 \func lowerCentralSeries_1+ (n : Nat) (G : Group) : NormalSubGroup G \elim n
-  | 0 => nonProperSubgroup
-  | suc n => commNormalSubgroup (lowerCentralSeries_1+ n G) nonProperSubgroup
+  | 0 => upSubGroup
+  | suc n => commNormalSubgroup (lowerCentralSeries_1+ n G) upSubGroup
